@@ -8,6 +8,8 @@ connectDB()
 
 const port = process.env.PORT || 4000
 
+app.use('/api/users', require('./routes/usersRouter'))
+
 app.listen(port, "0.0.0.0", () => {
   console.log(`El servidor esta funcionando en el puerto ${port}`)
 })

@@ -8,7 +8,7 @@ exports.authenticateUser = async (req, res, next) => {
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-		return res.status(400).json({ errors: errors.array() });
+    return res.status(400).json({ errors: errors.array() });
   }
 
   const { email, password } = req.body
@@ -36,5 +36,17 @@ exports.authenticateUser = async (req, res, next) => {
 }
 
 exports.authenticatedUser = async (req, res, next) => {
+  const authHeader = req.get("Authorization")
 
+  if (authHeader) {
+    const token = authHeader.split(" ")[1]
+    
+    try {
+      const user = jwt.verify(token, process.env.SECRET_KEY)
+      res.json({ user })
+    } catch (error) {
+      console.log("JWT no valido")
+    }
+  }
+  return next()
 }

@@ -1,3 +1,7 @@
+const Users = require('../models/usersModel')
+
 exports.newUser = async (req, res) => {
-  console.log('Desde nuevo usuario')
+  const user = await new Users(req.body)
+  user.save()
+  res.json({msg: "Usuario creado correctamente"})
 }

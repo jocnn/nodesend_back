@@ -1,5 +1,7 @@
 const User = require('../models/usersModel')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+require('dotenv').config({path: '.env.development'})
 
 exports.authenticateUser = async (req, res, next) => {
 
@@ -12,14 +14,16 @@ exports.authenticateUser = async (req, res, next) => {
     return next()
   }
 
-  console.log("🚀 ~ file: authsController.js ~ line 15 ~ exports.authenticateUser= ~ user", user)
-  console.log('usuario existe')
-
   if (bcrypt.compareSync(password, user.password)) {
-    console.log(
-      "🚀 ~ file: authsController.js ~ line 20 ~ exports.authenticateUser= ~ compareSync",
-      "El Password es correcto"
-	  )
+    const token = jwt.sign(
+      {
+        id: user._id,
+        nombre: user.name
+      },
+      process.env.SECRET_KEY,
+      { expiresIn: '8h' });
+        
+    res.json({token})
   } else {
     res.status(401).json({ msg: "Password incorrecto" })
     return next()

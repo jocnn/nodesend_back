@@ -3,7 +3,7 @@ const router = express.Router()
 const filesController = require('../controllers/filesController')
 const auth = require('../middleware/authMiddleware')
 
-router.post('/', filesController.uploadFile)
+router.post('/', auth, filesController.uploadFile)
 
 router.delete('/:id', filesController.deleteFile)
 

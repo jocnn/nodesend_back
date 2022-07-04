@@ -3,14 +3,14 @@ const shortid = require('shortid')
 
 exports.uploadFile = async (req, res, next) => {
 	const configMulter = {
-		limits: { fileSize: 1000000 },
+		limits: { fileSize: req.user ? 1024 * 1024 * 10 : 1024 * 1024 },
 		storage: (fileStorage = multer.diskStorage({
 			destination: (req, file, cb) => {
 				cb(null, __dirname + '/../uploads')
 			},
 			filename: (req, file, cb) => {
-				const extension = file.mimetype.split('/')[1]
-				cb(null, `${shortid.generate()}.${extension}`)
+				const extension = file.originalname.substring(file.originalname.lastIndexOf('.'), file.originalname.length)
+				cb(null, `${shortid.generate()}${extension}`)
 			},
 		})),
 	}

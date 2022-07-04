@@ -23,7 +23,7 @@ exports.authenticateUser = async (req, res, next) => {
     const token = jwt.sign(
       {
         id: user._id,
-        nombre: user.name
+        name: user.name
       },
       process.env.SECRET_KEY,
       { expiresIn: '8h' });

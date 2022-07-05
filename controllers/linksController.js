@@ -41,3 +41,28 @@ exports.newLink = async (req, res, next) => {
 		console.log(error)
 	}
 }
+
+exports.getLink = async (req, res, next) => {
+	const { url } = req.params
+
+	const link = await Links.findOne({ url })
+
+	if (!link) {
+		res.status(404).json({ msg: 'El enlace no existe' })
+		return next()
+	}
+
+	res.json({ file: link.name })
+
+	const { name, downloads } = link
+
+	if (downloads === 1) {
+		req.file = name
+		await Links.findOneAndDelete(req.params.url)
+
+		next()
+	} else {
+		link.downloads--
+		await link.save()
+	}
+}

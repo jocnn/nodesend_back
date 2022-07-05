@@ -1,5 +1,6 @@
 const multer = require('multer')
 const shortid = require('shortid')
+const fs = require('fs')
 
 exports.uploadFile = async (req, res, next) => {
 	const configMulter = {
@@ -18,7 +19,6 @@ exports.uploadFile = async (req, res, next) => {
 	const upload = multer(configMulter).single('file')
 
 	upload(req, res, async (error) => {
-		console.log(req.file)
 
 		if (!error) {
 			res.json({ file: req.file.filename })
@@ -29,4 +29,11 @@ exports.uploadFile = async (req, res, next) => {
 	})
 }
 
-exports.deleteFile = async (req, res, next) => {}
+exports.deleteFile = async (req, res, next) => {
+
+	try {
+		fs.unlinkSync(__dirname + `/../uploads/${req.file}`)
+	} catch (error) {
+		console.log(error)
+	}
+}
